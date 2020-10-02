@@ -62,7 +62,7 @@ class GuestRepository private constructor(context: Context) {
                 DataBaseConstants.GUEST.COLUMNS.PRESENCE,
                 guest.presence
             )
-            val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"
+            val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?" //condição = se a coluna ID foi igual ao args(ID do convidado)
             val args= arrayOf(guest.id.toString())
             db.update(DataBaseConstants.GUEST.TABLE_NAME, contentValues,selection, args)
             true
@@ -73,7 +73,17 @@ class GuestRepository private constructor(context: Context) {
 
     }
 
-    fun delete(guest: GuestModel) {
+    fun delete(id: Int): Boolean {
+        return try {
+            val db = mGuestDataBaseHelper.writableDatabase  //inserindo dado no banco
+
+            val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"
+            val args= arrayOf(id.toString())
+            db.delete(DataBaseConstants.GUEST.TABLE_NAME,selection, args)
+            true
+        } catch(e: Exception){
+            false
+        }
 
     }
 }
