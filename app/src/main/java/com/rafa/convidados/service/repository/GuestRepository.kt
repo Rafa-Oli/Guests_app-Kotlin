@@ -22,18 +22,118 @@ class GuestRepository private constructor(context: Context) {
 
 
     fun getAll(): List<GuestModel> { // traz todos os convidados
+
         val list: MutableList<GuestModel> = ArrayList()
-        return list
+
+
+        return try {
+            val db = mGuestDataBaseHelper.readableDatabase  //inserindo dado no banco
+
+            //db.rawQuery("select * from Guest where id = $id",null) //não é seguro por mais que seja mais rapido
+
+            val projection = arrayOf(
+                DataBaseConstants.GUEST.COLUMNS.ID,
+                DataBaseConstants.GUEST.COLUMNS.NAME,
+                DataBaseConstants.GUEST.COLUMNS.PRESENCE
+            ) // nomes de colunas que quer retornar
+
+
+            val cursor = db.query(
+                DataBaseConstants.GUEST.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()) {
+                    val id =
+                        cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.ID));
+                    val name =
+                        cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME)) //pegando o nome do convidado
+                    val presence =
+                        (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
+
+                    val guest = GuestModel(id, name, presence)
+                    list.add(guest)
+                }
+
+
+            }
+
+            cursor?.close()
+            list
+        } catch (e: Exception) {
+            list
+        }
+
     }
 
     fun getPresent(): List<GuestModel> { // traz todos os convidados
         val list: MutableList<GuestModel> = ArrayList()
-        return list
+
+        return try {
+            val db = mGuestDataBaseHelper.readableDatabase  //inserindo dado no banco
+
+            val cursor =
+                db.rawQuery("SELECT id, name, presence FROM Guest WHERE presence = 1", null)
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()) {
+                    val id =
+                        cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.ID));
+                    val name =
+                        cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME)) //pegando o nome do convidado
+                    val presence =
+                        (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
+
+                    val guest = GuestModel(id, name, presence)
+                    list.add(guest)
+                }
+
+
+            }
+
+            cursor?.close()
+            list
+        } catch (e: Exception) {
+            list
+        }
+
     }
 
     fun getAbsent(): List<GuestModel> { // traz todos os convidados
         val list: MutableList<GuestModel> = ArrayList()
-        return list
+
+        return try {
+            val db = mGuestDataBaseHelper.readableDatabase  //inserindo dado no banco
+
+            val cursor =
+                db.rawQuery("SELECT id, name, presence FROM Guest WHERE presence = 0", null)
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()) {
+                    val id =
+                        cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.ID));
+                    val name =
+                        cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME)) //pegando o nome do convidado
+                    val presence =
+                        (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
+
+                    val guest = GuestModel(id, name, presence)
+                    list.add(guest)
+                }
+
+
+            }
+
+            cursor?.close()
+            list
+        } catch (e: Exception) {
+            list
+        }
+
     }
 
     fun get(id: Int): GuestModel? {
