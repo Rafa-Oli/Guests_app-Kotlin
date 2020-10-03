@@ -18,6 +18,6 @@ class GuestFormViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun save(name: String, presence: Boolean) {
         val guest = GuestModel(name = name, presence = presence) //entidade
-        mGuestRepository.save(guest)
+        mSaveGuest.value = mGuestRepository.save(guest) // vai setar a mudança de se teve sucesso ou falha no guestFormActivity
     }
 }
