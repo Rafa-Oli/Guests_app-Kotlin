@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_guest_form.*
 //apenas escuta retornos da viewmodel
 class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mViewModel: GuestFormViewModel
-
+    private var mGuestId: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_guest_form)
@@ -26,17 +26,19 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
         if (id == R.id.button_save) {
             val name= edit_name.text.toString()
             val presence= radio_presence.isChecked
-            mViewModel.save(name,presence)
+            mViewModel.save(mGuestId,name,presence)
         }
     }
     private fun observe(){
         mViewModel.saveGuest.observe(this, Observer {
             if(it){
                 Toast.makeText(applicationContext,"Sucesso",Toast.LENGTH_SHORT).show()
+                finish()
             }else{
                 Toast.makeText(applicationContext,"Falha",Toast.LENGTH_SHORT).show()
+                finish()
             }
-            finish()
+
         })
     }
     private fun setListeners() {

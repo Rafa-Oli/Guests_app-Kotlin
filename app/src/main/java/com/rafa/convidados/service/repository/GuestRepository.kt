@@ -24,9 +24,7 @@ class GuestRepository private constructor(context: Context) {
     fun getAll(): List<GuestModel> { // traz todos os convidados
 
         val list: MutableList<GuestModel> = ArrayList()
-
-
-        return try {
+ return try {
             val db = mGuestDataBaseHelper.readableDatabase  //inserindo dado no banco
 
             //db.rawQuery("select * from Guest where id = $id",null) //não é seguro por mais que seja mais rapido
@@ -92,9 +90,7 @@ class GuestRepository private constructor(context: Context) {
                     val guest = GuestModel(id, name, presence)
                     list.add(guest)
                 }
-
-
-            }
+  }
 
             cursor?.close()
             list
@@ -182,12 +178,10 @@ class GuestRepository private constructor(context: Context) {
     fun save(guest: GuestModel): Boolean {
         return try {
             val db = mGuestDataBaseHelper.writableDatabase  //inserindo dado no banco
+
             val contentValue = ContentValues() // classe que pode adicionar valores para ela
             contentValue.put(DataBaseConstants.GUEST.COLUMNS.NAME, guest.name) // chave-valor
-            contentValue.put(
-                DataBaseConstants.GUEST.COLUMNS.PRESENCE,
-                guest.presence
-            )  // 0 para falso e 1 para verdadeiro
+            contentValue.put(DataBaseConstants.GUEST.COLUMNS.PRESENCE, guest.presence)  // 0 para falso e 1 para verdadeiro
             db.insert(DataBaseConstants.GUEST.TABLE_NAME, null, contentValue)
             true
         } catch (e: Exception) {
