@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.rafa.convidados.viewmodel.GuestFormViewModel
 import com.rafa.convidados.R
+import com.rafa.convidados.service.constants.GuestConstants
 import kotlinx.android.synthetic.main.activity_guest_form.*
 //apenas escuta retornos da viewmodel
 class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
@@ -17,9 +18,21 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_guest_form)
         mViewModel = ViewModelProvider(this).get(GuestFormViewModel::class.java)
+
         setListeners()
         observe()
+        loadData()
+ }
+    private fun loadData(){
+        val bundle = intent.extras
+        if(bundle != null){
+            val id = bundle.getInt(GuestConstants.GUESTID) // pegando o id do usuario
+            // carregar:
+            mViewModel.load(id)
+
+        }
     }
+
     override fun onClick(v: View) {
         val id = v.id
 
@@ -38,7 +51,14 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
                 Toast.makeText(applicationContext,"Falha",Toast.LENGTH_SHORT).show()
                 finish()
             }
-
+ })
+        mViewModel.guest.observe(this,Observer{ //it: usuario
+            edit_name.setText(it.name)
+            if(it.presence){
+                radio_presence.isChecked= true
+            }else{
+                radio_absent.isChecked = true
+            }
         })
     }
     private fun setListeners() {
