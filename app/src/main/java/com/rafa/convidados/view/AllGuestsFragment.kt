@@ -17,25 +17,37 @@ import com.rafa.convidados.viewmodel.AllGuestsViewModel
 
 class AllGuestsFragment : Fragment() {
 
-    private lateinit var homeViewModel: AllGuestsViewModel
+    private lateinit var allGuestsViewModel: AllGuestsViewModel
+    private val mAdapter: GuestAdapter = GuestAdapter()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
+        allGuestsViewModel =
                 ViewModelProvider(this).get(AllGuestsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_all, container, false)
 
         //RecyclerView
         //1- Obter a recycler
         val recycler = root.findViewById<RecyclerView>(R.id.recycler_all_guests)
-        //2 - Definir um layout: como se comporta com o código
-        recycler.layoutManager = LinearLayoutManager(context)
-        //3 - Definir um adapter : Layouts + dados
-        recycler.adapter = GuestAdapter()
 
+        //2 - Definir um layout: como se comporta na tela com o código
+        recycler.layoutManager = LinearLayoutManager(context)
+
+        //3 - Definir um adapter : Layouts + dados
+        recycler.adapter = mAdapter
+
+        observer()
+        allGuestsViewModel.load()
         return root
+    }
+
+    private fun observer(){
+        allGuestsViewModel.guestList.observe(viewLifecycleOwner, Observer{
+            mAdapter.updateGuests(it)
+
+        })
     }
 }
