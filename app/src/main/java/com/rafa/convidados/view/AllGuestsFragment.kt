@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,21 +15,21 @@ import com.rafa.convidados.R
 import com.rafa.convidados.service.constants.GuestConstants
 import com.rafa.convidados.view.adapter.GuestAdapter
 import com.rafa.convidados.view.listener.GuestListener
-import com.rafa.convidados.viewmodel.AllGuestsViewModel
+import com.rafa.convidados.viewmodel.GuestsViewModel
 
 class AllGuestsFragment : Fragment() {
 
-    private lateinit var mViewModel: AllGuestsViewModel
+    private lateinit var mViewModel: GuestsViewModel
     private val mAdapter: GuestAdapter = GuestAdapter()
     private lateinit var mListener: GuestListener
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle?
+            s: Bundle?
     ): View? {
         mViewModel=
-                ViewModelProvider(this).get(AllGuestsViewModel::class.java)
+                ViewModelProvider(this).get(GuestsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_all, container, false)
 
         //RecyclerView
@@ -56,7 +55,7 @@ class AllGuestsFragment : Fragment() {
             override fun onDelete(id: Int) {
                 mViewModel.delete(id)
 
-                mViewModel.load()
+                mViewModel.load(GuestConstants.FILTER.EMPTY)
 
             }
         }
@@ -69,7 +68,7 @@ class AllGuestsFragment : Fragment() {
 
    override fun onResume(){
        super.onResume()
-       mViewModel.load()
+       mViewModel.load(GuestConstants.FILTER.EMPTY)
    }
     private fun observer(){
         mViewModel.guestList.observe(viewLifecycleOwner, Observer{
