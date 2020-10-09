@@ -20,10 +20,15 @@ class GuestFormViewModel(application: Application) : AndroidViewModel(applicatio
     val guest: LiveData<GuestModel> = mGuest
 
     fun save(id: Int,name: String, presence: Boolean) {
-        val guest = GuestModel(id, name = name, presence = presence) //entidade
-
-    mSaveGuest.value =
+        val guest = GuestModel(id,name, presence) //entidade
+        if(id == 0){
+            mSaveGuest.value =
                 mGuestRepository.save(guest) // vai setar a mudança de se teve sucesso ou falha no guestFormActivity
+        }else{
+            mSaveGuest.value =  mGuestRepository.update(guest)
+        }
+
+
 
     }
 

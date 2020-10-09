@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.activity_guest_form.*
 //apenas escuta retornos da viewmodel
 class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mViewModel: GuestFormViewModel
+
+
     private var mGuestId: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,13 +24,15 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
         setListeners()
         observe()
         loadData()
+        radio_presence.isChecked = true
+
  }
     private fun loadData(){
         val bundle = intent.extras
         if(bundle != null){
-            val id = bundle.getInt(GuestConstants.GUESTID) // pegando o id do usuario
+            val mGuestId = bundle.getInt(GuestConstants.GUESTID) // pegando o id do usuario
             // carregar:
-            mViewModel.load(id)
+            mViewModel.load(mGuestId)
 
         }
     }
